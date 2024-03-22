@@ -5,6 +5,11 @@ __pycache__/
 
 # C extensions
 *.so
+.gitignore
+# custumized folder and file
+DB/
+냥이.jpg
+
 
 # Distribution / packaging
 .Python
