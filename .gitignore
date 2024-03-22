@@ -7,8 +7,10 @@ __pycache__/
 *.so
 .gitignore
 # custumized folder and file
-DB/
-냥이.jpg
+streamlit/DB/
+streamlit/냥이.jpg
+code/data/summary/
+code/data/summary.csv
 
 # Distribution / packaging
 .Python
