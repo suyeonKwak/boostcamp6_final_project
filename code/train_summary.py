@@ -1,4 +1,10 @@
-from utils import *
+from boostcamp6_final_project.code.utils import (
+    load_data,
+    tokenized_dataset,
+    SUM_Dataset,
+)
+
+import torch
 from transformers import (
     AutoTokenizer,
     AutoConfig,
