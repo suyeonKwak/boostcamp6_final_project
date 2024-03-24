@@ -29,7 +29,7 @@ def build_text_model():
 def build_t2i_model():
     # model_id = "stabilityai/stable-diffusion-xl-base-1.0"
     model_id = "SaiRaj03/Text_To_Image"
-    adapter_id = "latent-consistency/lcm-lora-sdxl"
+    # adapter_id = "latent-consistency/lcm-lora-sdxl"
 
     # pipe = AutoPipelineForText2Image.from_pretrained(
     #     model_id, torch_dtype=torch.float16, variant="fp16", cache_dir="./huggingface"
