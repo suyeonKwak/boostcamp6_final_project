@@ -103,9 +103,7 @@ def draw_image(
         # korean to English
         text = GoogleTranslator(source="ko", target="en").translate(summary)
 
-        prompt = (
-            "A water painting of the scene that " + text
-        )  # + " in the style of Monet"
+        prompt = "A painting of the scene that " + text  # + " in the style of Monet"
         print(f"prompt : {prompt}")
 
     elif mode == "keyword":
@@ -239,7 +237,7 @@ if __name__ == "__main__":
                 ]
             )
             new_image_path = os.path.join(
-                save_dir, f"image_water_{nis}_{gs}_{file_count + 1}.png"
+                save_dir, f"image_None_{nis}_{gs}_{file_count + 1}.png"
             )
             new_image = new_image.resize((768, 768))
 

@@ -15,6 +15,10 @@ code/test_images/
 huggingface/
 code/exercise.py
 
+streamlit/config.yaml
+requirement-dev.txt
+
+
 # Distribution / packaging
 .Python
 build/
