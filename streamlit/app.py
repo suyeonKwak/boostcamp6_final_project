@@ -5,14 +5,15 @@ from datetime import datetime
 from image_generator import draw_image
 from summary_generator import summarize_text
 from db_utils import save_info, load_info
+import streamlit_authenticator as stauth
 
 import os
 
 # os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"  # Arrange GPU devices starting from 0
 os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 
-
-with st.sidebar:
+def sidebar():
+    with st.sidebar:
 
     choose = option_menu(
         "Menu",
@@ -43,13 +44,10 @@ with st.sidebar:
     # 소개 링크
     "[Developed by Suyeon](https://github.com/suyeonKwak)"
 
-
-st.title("🎨 Drawing Diary ")
-st.caption("AI model serving by huggingface 🤗")
+    return choose
 
 
-if choose == "Write Diary":
-
+def write_diary():
     col7, col8 = st.columns(2)
     col3, col4 = st.columns(2)
 
@@ -112,8 +110,7 @@ if choose == "Write Diary":
                 weather=weather,
             )
 
-
-elif choose == "Memory":
+def load_memory():
     st.write("gallery")
     col1, col2 = st.columns(2)
 
@@ -159,11 +156,69 @@ elif choose == "Memory":
                     globals()[f"expander{idx}"].image(image[idx])
                     globals()[f"expander{idx}"].caption(prompt[idx])
 
-
-elif choose == "About":
+def about_me():
     st.write(
         """
     당신의 이야기를 그림과 함께 남겨보아요! \n
     AI를 활용한 그림일기 데모 페이지 입니다.
     """
     )
+
+def login():
+    sidebar_title = st.sidebar.header('로그인')
+    username = st.sidebar.text_input("ID")
+    password = st.sidebar.text_input("Password",type='password')
+    login = st.sidebar.button('로그인')
+    signin = st.sidebar.button('회원가입')
+    if login:
+    create_usertable()
+    create_diarytable()
+    hashed_pswd = make_hashes(password)
+    result = login_user(username,check_hashes(password,hashed_pswd))
+
+    if result:
+      st.session_state['is_login'] = True
+      st.session_state['id'] = username
+      st.session_state['my_data'] = load_user_data(username)
+      st.session_state['today_data'] = st.session_state['my_data'][st.session_state['my_data']['date']==str(today)]
+      st.switch_page('pages/diary.py')
+    else:
+      st.sidebar.warning("아이디 혹은 비밀번호가 틀렸습니다.")
+
+  if signin:
+    create_usertable()
+    if not password:
+        st.sidebar.error('비밀번호를 입력해주세요')
+        return
+    result = join_user(username)
+    if result:
+      st.sidebar.error('이미 존재하는 아이디입니다.')
+    else:
+      add_userdata(username,make_hashes(password))
+      user_db.commit()
+      st.sidebar.success(f'가입을 환영합니다 {username}님')
+      st.session_state['is_login'] = True
+      st.session_state['id'] = username
+      create_diarytable()
+      st.session_state['my_data'] = load_user_data(username)
+      st.session_state['today_data'] = st.session_state['my_data'][st.session_state['my_data']['date']==str(today)]
+      time.sleep(2)
+      st.switch_page('pages/diary.py')
+
+def main():
+    st.title("🎨 Drawing Diary ")
+    st.caption("AI model serving by huggingface 🤗")
+    
+    choose = sidebar()
+    if choose == "Write Diary":
+        write_diary()
+    elif choose == "Memory":
+        load_memory()
+    elif choose == "About":
+        about_me()
+
+
+if __name__=="__main__":
+
+    main()
+    

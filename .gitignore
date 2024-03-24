@@ -9,7 +9,10 @@ __pycache__/
 # custumized folder and file
 DB/
 냥이.jpg
-
+code/
+huggingface/
+streamlit/config.yaml
+requirement-dev.txt
 
 # Distribution / packaging
 .Python
