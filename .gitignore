@@ -11,6 +11,8 @@ streamlit/DB/
 streamlit/냥이.jpg
 code/data/summary/
 code/data/summary.csv
+code/test_images/
+huggingface/
 
 # Distribution / packaging
 .Python
