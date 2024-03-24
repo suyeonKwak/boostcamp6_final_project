@@ -103,7 +103,7 @@ def draw_image(
         # korean to English
         text = GoogleTranslator(source="ko", target="en").translate(summary)
 
-        prompt = "A painting of the scene that " + text  # + " in the style of Monet"
+        prompt = "A drawing of the scene that " + text  # + " in the style of Monet"
         print(f"prompt : {prompt}")
 
     elif mode == "keyword":
@@ -134,7 +134,7 @@ if __name__ == "__main__":
         주말까지 언제 기다리지? 오늘은 학생식당에서 밥을 먹었다. 동기들이랑 연구실에서 각자 공부하다/
         시간 되면 밥 먹으러가고 다시 연구하다 칼퇴하는 게 일상이 됐다. 오늘 하루도 고생했다~""",
         """
-        기다리고 기다리던 아이유 콘서트를 보고 왔다!! 아이유가 아이유했다. Love wins all을 /
+        기다리고 기다리던 아이유 콘서트를 보고 왔다!! 아이유가 아이유했다. 노래 "Love wins all"을 /
         들을 때는 어찌나 울컥하던지 나도 모르게 눈물이 났다. 콘서트장을 가득 채우던 보랏빛 물결은 /
         너무나도 아름다웠다. 다음 콘서트에서도 내 자리 있었으면!! ㅠㅠ 콘서트 다녀오니 체력이 바닥 났다. /
         집 가자마자 드러누웠다. """,
@@ -237,7 +237,7 @@ if __name__ == "__main__":
                 ]
             )
             new_image_path = os.path.join(
-                save_dir, f"image_None_{nis}_{gs}_{file_count + 1}.png"
+                save_dir, f"image_draw_{nis}_{gs}_{file_count + 1}.png"
             )
             new_image = new_image.resize((768, 768))
 
