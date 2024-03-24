@@ -1,12 +1,35 @@
 import pandas as pd
 from PIL import Image
+from typing import Optional
+import os
+
+os.chdir("/home/mai/sy/project/boostcamp6_final_project/streamlit")
 
 
-def save_info(diary: str, prompt: str, user_id: str):
-    df = pd.read("./DB/db.csv")
+def save_info(
+    diary: str,
+    prompt: str,
+    image: Image,
+    date: str,
+    weather: str,
+    user_id: Optional[str] = None,
+):
+    df = pd.read_csv("./DB/db.csv")
+    print(date)
 
-    image_path = ""
-    id = ""
+    if df[df["user_id"] == user_id].shape[0] == 0:
+        id = user_id + "0"
+    else:
+        id = user_id + str(df[df["user_id"] == user_id].shape[0])
+
+    image_path = "./DB/images/" + user_id + ".jpg"
+
+    try:
+        image.save(image_path)
+        print(f"이미지 저장 성공: {image_path}")
+    except Exception:
+        print("이미지 저장 실패")
+        return False
 
     new_row = {
         "id": id,
@@ -14,25 +37,35 @@ def save_info(diary: str, prompt: str, user_id: str):
         "prompt": prompt,
         "user_id": user_id,
         "image_path": image_path,
+        "weather": weather,
+        "date": date,
     }
 
-    df = df.append(new_row, ignore_index=True)
+    df.loc[df.shape[0]] = new_row
+    df.to_csv("./DB/db.csv", index=False)
 
     print("정보를 저장했습니다!")
     return True
 
 
-def load_info(user_id: str):
-    df = pd.read("./DB/db.csv")
+def load_info(user_id: str, page: str = "diary"):
+    df = pd.read_csv("./DB/db.csv")
 
     df_id = df[df["user_id"] == user_id]
 
-    diary = df_id["diary"].tolist()
-    prompt = df_id["prompt"].tolist()
-    image = []
+    if page == "diary":
+        return df_id["date"].tolist()
 
-    for row in df_id["image_path"].iterrows():
-        img = Image.open(row[0])
-        image.append(img)
+    elif page == "memory":
+        df_id.sort_values(by="date", inplace=True)
+        diary = df_id["diary"].tolist()
+        prompt = df_id["prompt"].tolist()
+        date = df_id["date"].tolist()
+        weather = df_id["weather"].to_list()
+        image = []
 
-    return diary, prompt, image
+        for row in df_id["image_path"].items():
+            img = Image.open(row[1])
+            image.append(img)
+
+        return diary, prompt, image, date, weather
