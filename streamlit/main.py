@@ -4,8 +4,17 @@ from streamlit_option_menu import option_menu
 from pages.diary import write_diary
 from pages.memory import load_memory
 from pages.about import about_me
-import hashlib
-from DB.db_utils import *
+from DB.db_utils import (
+    check_hashes,
+    create_diarytable,
+    create_usertable,
+    make_hashes,
+    load_user_data,
+    login_user,
+    add_userdata,
+    join_user,
+)
+import time
 
 
 def menu():
@@ -62,56 +71,55 @@ def authenticated_menu():
     return choose
 
 
-def login():
+def login(user_c, diary_c, user_db, diary_db):
 
-    sidebar_title = st.sidebar.header('로그인')
-    username = st.sidebar.text_input("ID")
-    password = st.sidebar.text_input("Password",type='password')
-    login = st.sidebar.button('로그인')
-    signin = st.sidebar.button('회원가입')
+    with st.sidebar:
+        st.header("로그인")
+        username = st.text_input("ID")
+        password = st.text_input("Password", type="password")
+
+        login = st.button("로그인")
+        signin = st.button("회원가입")
 
     if login:
-        create_usertable()
-        create_diarytable()
+        create_usertable(user_c)
+        create_diarytable(diary_c)
         hashed_pswd = make_hashes(password)
-        result = login_user(username,check_hashes(password,hashed_pswd))
+        result = login_user(username, check_hashes(password, hashed_pswd), user_c)
 
-    if result:
-        st.session_state['is_login'] = True
-        st.session_state['id'] = username
-        st.session_state['my_data'] = load_user_data(username)
-        st.session_state['today_data'] = st.session_state['my_data'][st.session_state['my_data']['date']==str(today)]
-        menu()
-    else:
-        st.sidebar.warning("아이디 혹은 비밀번호가 틀렸습니다.")
+        if result:
+            st.session_state["is_login"] = True
+            st.session_state["id"] = username
+            st.session_state["my_data"] = load_user_data(username, diary_c)
+            menu()
+        else:
+            st.sidebar.warning("아이디 혹은 비밀번호가 틀렸습니다.")
 
     if signin:
-    create_usertable(c=user_c) 
+        create_usertable(user_c)
     if not password:
-        st.sidebar.error('비밀번호를 입력해주세요')
+        st.sidebar.error("비밀번호를 입력해주세요")
         return
-    result = join_user(username)
+    result = join_user(username, user_c)
     if result:
-        st.sidebar.error('이미 존재하는 아이디입니다.')
+        st.sidebar.error("이미 존재하는 아이디입니다.")
     else:
-        add_userdata(username,make_hashes(password))
+        add_userdata(username, make_hashes(password), user_c, user_db)
         user_db.commit()
-        st.sidebar.success(f'가입을 환영합니다 {username}님')
-        st.session_state['is_login'] = True
-        st.session_state['id'] = username
-        create_diarytable()
-        st.session_state['my_data'] = load_user_data(username)
-        st.session_state['today_data'] = st.session_state['my_data'][st.session_state['my_data']['date']==str(today)]
+        st.sidebar.success(f"가입을 환영합니다 {username}님")
+        st.session_state["is_login"] = True
+        st.session_state["id"] = username
+        create_diarytable(diary_c)
+        st.session_state["my_data"] = load_user_data(username, diary_c)
         time.sleep(2)
-        st.switch_page('pages/diary.py')
-
+        menu()
 
 
 if __name__ == "__main__":
 
     # DB 연결
-    user_db = sqlite3.connect("./streamlit/DB/users.splite")
-    diary_db = sqlite3.connect("./steramlit/DB/diarys.sqlite")
+    user_db = sqlite3.connect("./streamlit/DB/users_db.sqlite")
+    diary_db = sqlite3.connect("./streamlit/DB/diary_db.sqlite")
     user_c = user_db.cursor()
     diary_c = diary_db.cursor()
 
@@ -123,4 +131,4 @@ if __name__ == "__main__":
     st.session_state["id"] = ""
 
     menu()
-    login()
+    login(user_c, diary_c, user_db, diary_db)
