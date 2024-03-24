@@ -90,7 +90,12 @@ def keyword_extract(text: str):
     return decoded_output[:-1]
 
 
-def draw_image(summary: str, mode: str = "summary", num_inference_steps: int =20, guidance_scale: int =8.5):
+def draw_image(
+    summary: str,
+    mode: str = "summary",
+    num_inference_steps: int = 20,
+    guidance_scale: int = 8.5,
+):
 
     pipe = build_t2i_model()
 
@@ -109,7 +114,9 @@ def draw_image(summary: str, mode: str = "summary", num_inference_steps: int =20
 
     # disable guidance_scale by passing 0
     generated_image = pipe(
-        prompt=prompt, num_inference_steps=num_inference_steps, guidance_scale=guidance_scale
+        prompt=prompt,
+        num_inference_steps=num_inference_steps,
+        guidance_scale=guidance_scale,
     ).images[0]
 
     title = GoogleTranslator(source="en", target="ko").translate(prompt)
@@ -180,51 +187,63 @@ if __name__ == "__main__":
     #     보내니 소소한 행복을 누리는 것 같아 좋았다."""
 
     mode = "summary"  # keyword
+    num_inference_steps = 30
+    guidance_scale = 8.5
+    grid = {
+        "num_inference_steps": [10, 20, 30, 40, 50],
+        "guidance_scale": [5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 11, 12],
+    }
 
-    images = []
-    titles = []
-    for text in test_texts:
-        if mode == "summary":
-            summary = summarize_text(text)
-        elif mode == "keyword":
-            summary = keyword_extract(text)
+    for gs in grid["guidance_scale"]:
+        for nis in grid["num_inference_steps"]:
+            print(f"num_inference_steps : {nis} \nguidance_scale : {gs} \n")
+            images = []
+            titles = []
+            for text in test_texts:
+                if mode == "summary":
+                    summary = summarize_text(text)
+                elif mode == "keyword":
+                    summary = keyword_extract(text)
 
-        generated_image, title = draw_image(summary, mode=mode)
+                generated_image, title = draw_image(summary, mode=mode)
 
-        images.append(generated_image)
-        titles.append(title)
+                images.append(generated_image)
+                titles.append(title)
 
-    # 이미지의 가로, 세로 크기 추출
-    widths, heights = zip(*(i.size for i in images))
+            # 이미지의 가로, 세로 크기 추출
+            widths, heights = zip(*(i.size for i in images))
 
-    # 새로 생성될 이미지의 크기 계산
-    total_width = max(widths) * 3
-    max_height = max(heights) * 3
+            # 새로 생성될 이미지의 크기 계산
+            total_width = max(widths) * 3
+            max_height = max(heights) * 3
 
-    # 새로운 이미지 생성 (배경 투명)
-    new_image = Image.new("RGBA", (total_width, max_height))
+            # 새로운 이미지 생성 (배경 투명)
+            new_image = Image.new("RGBA", (total_width, max_height))
 
-    # 이미지를 이어붙이기
-    x_offset = 0
-    y_offset = 0
-    for img in images:
-        new_image.paste(img, (x_offset, y_offset))
-        x_offset += img.width
-        if x_offset >= total_width:
+            # 이미지를 이어붙이기
             x_offset = 0
-            y_offset += img.height
+            y_offset = 0
+            for img in images:
+                new_image.paste(img, (x_offset, y_offset))
+                x_offset += img.width
+                if x_offset >= total_width:
+                    x_offset = 0
+                    y_offset += img.height
 
-    save_dir = "./code/test_images"
-    file_count = len(
-        [
-            name
-            for name in os.listdir(save_dir)
-            if os.path.isfile(os.path.join(save_dir, name)) and mode in name
-        ]
-    )
-    new_image_path = os.path.join(save_dir, f"image_water_{}_{}_{file_count + 1}.png")
-    new_image = new_image.resize((768, 768))
+            save_dir = "./code/test_images"
+            file_count = len(
+                [
+                    name
+                    for name in os.listdir(save_dir)
+                    if os.path.isfile(os.path.join(save_dir, name)) and mode in name
+                ]
+            )
+            new_image_path = os.path.join(
+                save_dir, f"image_water_{nis}_{gs}_{file_count + 1}.png"
+            )
+            new_image = new_image.resize((768, 768))
 
-    new_image.save(new_image_path)
-    for title in titles:
-        print(title)
+            new_image.save(new_image_path)
+            for title in titles:
+                print(title)
+            print("-" * 50)

@@ -13,6 +13,7 @@ code/data/summary/
 code/data/summary.csv
 code/test_images/
 huggingface/
+code/exercise.py
 
 # Distribution / packaging
 .Python
