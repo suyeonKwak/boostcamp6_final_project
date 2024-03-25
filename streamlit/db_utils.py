@@ -11,7 +11,7 @@ def save_info(
     weather: str,
     user_id: Optional[str] = None,
 ):
-    df = pd.read_csv("./streamlit/db_test.csv")
+    df = pd.read_csv("../db_test.csv")
     print(date)
 
     if df[df["user_id"] == user_id].shape[0] == 0:
@@ -19,7 +19,7 @@ def save_info(
     else:
         id = user_id + str(df[df["user_id"] == user_id].shape[0])
 
-    image_path = "./streamlit/images/" + user_id + ".jpg"
+    image_path = "../images/" + user_id + ".jpg"
 
     try:
         image.save(image_path)
@@ -39,14 +39,14 @@ def save_info(
     }
 
     df.loc[df.shape[0]] = new_row
-    df.to_csv("./streamlit/db_test.csv", index=False)
+    df.to_csv("../db_test.csv", index=False)
 
     print("정보를 저장했습니다!")
     return True
 
 
 def load_info(user_id: str, page: str = "diary"):
-    df = pd.read_csv("./streamlit/db_test.csv")
+    df = pd.read_csv("../db_test.csv")
 
     df_id = df[df["user_id"] == user_id]
 
