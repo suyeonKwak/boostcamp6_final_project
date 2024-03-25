@@ -2,14 +2,11 @@ deep-translator==1.11.4
 diffusers==0.27.0
 huggingface-hub==0.21.4
 nltk==3.8.1
-pillow @ file:///croot/pillow_1707233021655/work
-prompt-toolkit @ file:///home/conda/feedstock_root/build_artifacts/prompt-toolkit_1702399386289/work
+pillow==10.2.0
 streamlit-option-menu==0.3.12
-timm @ git+https://github.com/huggingface/pytorch-image-models.git@492947d1293fe7b5151bb2b9d9add3df37fabf63
 tokenizers==0.15.2
 torch==2.1.2
 torchaudio==2.1.2
 torchvision==0.16.2
 tqdm==4.66.2
 transformers==4.38.2
-urllib3 @ file:///croot/urllib3_1707770551213/work
