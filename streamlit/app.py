@@ -170,6 +170,7 @@ def about_me():
 
 
 def main():
+    print(os.getcwd())
     st.title("🎨 Drawing Diary ")
     st.caption("AI model serving by huggingface 🤗")
 
