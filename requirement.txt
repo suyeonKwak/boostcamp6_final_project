@@ -1,6 +1,0 @@
-strealit-option-menu
-transformers
-torch
-streamlit
-pillow
-nltk
