@@ -5,7 +5,6 @@ huggingface-hub==0.21.4
 nltk==3.8.1
 pillow @ file:///croot/pillow_1707233021655/work
 prompt-toolkit @ file:///home/conda/feedstock_root/build_artifacts/prompt-toolkit_1702399386289/work
-streamlit==1.32.1
 streamlit-option-menu==0.3.12
 timm @ git+https://github.com/huggingface/pytorch-image-models.git@492947d1293fe7b5151bb2b9d9add3df37fabf63
 tokenizers==0.15.2
