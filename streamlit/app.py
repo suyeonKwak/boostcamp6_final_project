@@ -6,50 +6,50 @@ from image_generator import draw_image
 from summary_generator import summarize_text
 from db_utils import save_info, load_info
 
+# import streamlit_authenticator as stauth
+
 import os
 
 # os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"  # Arrange GPU devices starting from 0
 os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 
 
-with st.sidebar:
+def sidebar():
+    with st.sidebar:
 
-    choose = option_menu(
-        "Menu",
-        ["Write Diary", "Memory", "About"],
-        icons=["pencil", "book-half", "emoji-sunglasses"],
-        menu_icon="list",
-        default_index=0,
-        styles={
-            "container": {"padding": "5!important", "background-color": "#000000"},
-            "icon": {"color": "#A3B899", "font-size": "25px"},
-            "nav-link": {
-                "font-size": "16px",
-                "text-align": "left",
-                "margin": "0px",
-                "--hover-color": "#CCCCCC",
-            },
-            "nav-link-selected": {"background-color": "#667B68"},
-        },  # css 설정
-    )
+        choose = option_menu(
+            "Menu",
+            ["Write Diary", "Memory", "About"],
+            icons=["pencil", "book-half", "emoji-sunglasses"],
+            menu_icon="list",
+            default_index=0,
+            styles={
+                "container": {"padding": "5!important", "background-color": "#000000"},
+                "icon": {"color": "#A3B899", "font-size": "25px"},
+                "nav-link": {
+                    "font-size": "16px",
+                    "text-align": "left",
+                    "margin": "0px",
+                    "--hover-color": "#CCCCCC",
+                },
+                "nav-link-selected": {"background-color": "#667B68"},
+            },  # css 설정
+        )
 
-    # 유저 이름 받기 (간이 로그인)
+        # 유저 이름 받기 (간이 로그인)
 
-    # 갤러리(마이페이지)
-    # 유저id의 데이터 불러오기
-    # 갤러리 형식으로 날짜와 그림 보여주기
-    # 누르면 글도 보이게
+        # 갤러리(마이페이지)
+        # 유저id의 데이터 불러오기
+        # 갤러리 형식으로 날짜와 그림 보여주기
+        # 누르면 글도 보이게
 
-    # 소개 링크
-    "[Developed by Suyeon](https://github.com/suyeonKwak)"
+        # 소개 링크
+        "[Developed by Suyeon](https://github.com/suyeonKwak)"
 
-
-st.title("🎨 Drawing Diary ")
-st.caption("AI model serving by huggingface 🤗")
+    return choose
 
 
-if choose == "Write Diary":
-
+def write_diary():
     col7, col8 = st.columns(2)
     col3, col4 = st.columns(2)
 
@@ -113,7 +113,7 @@ if choose == "Write Diary":
             )
 
 
-elif choose == "Memory":
+def load_memory():
     st.write("gallery")
     col1, col2 = st.columns(2)
 
@@ -160,10 +160,28 @@ elif choose == "Memory":
                     globals()[f"expander{idx}"].caption(prompt[idx])
 
 
-elif choose == "About":
+def about_me():
     st.write(
         """
     당신의 이야기를 그림과 함께 남겨보아요! \n
     AI를 활용한 그림일기 데모 페이지 입니다.
     """
     )
+
+
+def main():
+    st.title("🎨 Drawing Diary ")
+    st.caption("AI model serving by huggingface 🤗")
+
+    choose = sidebar()
+    if choose == "Write Diary":
+        write_diary()
+    elif choose == "Memory":
+        load_memory()
+    elif choose == "About":
+        about_me()
+
+
+if __name__ == "__main__":
+
+    main()
