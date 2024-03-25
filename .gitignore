@@ -5,6 +5,20 @@ __pycache__/
 
 # C extensions
 *.so
+.gitignore
+
+# custumized folder and file
+streamlit/DB/
+streamlit/냥이.jpg
+code/data/summary/
+code/data/summary.csv
+code/test_images/
+huggingface/
+code/exercise.py
+
+streamlit/config.yaml
+requirement-dev.txt
+
 
 code/
 huggingface/
