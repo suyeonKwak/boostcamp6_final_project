@@ -6,6 +6,7 @@ __pycache__/
 # C extensions
 *.so
 .gitignore
+
 # custumized folder and file
 streamlit/DB/
 streamlit/냥이.jpg
