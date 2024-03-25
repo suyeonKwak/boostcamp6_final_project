@@ -1,7 +1,6 @@
 deep-translator==1.11.4
 diffusers==0.27.0
-extra-streamlit-components==0.1.71
-filelock @ file:///croot/filelock_1700591183607/work
+extra-streamlit-components==0.1.71]
 huggingface-hub==0.21.4
 nltk==3.8.1
 pillow @ file:///croot/pillow_1707233021655/work
