@@ -1,5 +1,5 @@
 import torch
-from diffusers import LCMScheduler, AutoPipelineForText2Image
+from diffusers import DiffusionPipeline
 from deep_translator import GoogleTranslator
 
 import os
@@ -9,34 +9,31 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "2"  # Set the GPU 2 to use
 
 
 def build_t2i_model():
-    model_id = "stabilityai/stable-diffusion-xl-base-1.0"
-    adapter_id = "latent-consistency/lcm-lora-sdxl"
+    model_id = "SaiRaj03/Text_To_Image"
 
-    pipe = AutoPipelineForText2Image.from_pretrained(
-        model_id, torch_dtype=torch.float16, variant="fp16"
+    pipe = DiffusionPipeline.from_pretrained(
+        model_id, torch_dtype=torch.float16, variant="fp16", cache_dir="./huggingface"
     )
-    pipe.scheduler = LCMScheduler.from_config(pipe.scheduler.config)
-    pipe.to("cuda")
 
-    # load and fuse lcm lora
-    pipe.load_lora_weights(adapter_id)
-    pipe.fuse_lora()
+    pipe.to("cuda")
 
     return pipe
 
 
-def draw_image(summary: str):
+def draw_image(summary: str, num_inference_steps: int = 50, guidance_scale: int = 12):
 
     pipe = build_t2i_model()
 
     # korean to English
     text = GoogleTranslator(source="ko", target="en").translate(summary)
 
-    prompt = "A scene that " + text
+    prompt = "A cartoon scene that " + text
 
     # disable guidance_scale by passing 0
     generated_image = pipe(
-        prompt=prompt, num_inference_steps=20, guidance_scale=8.5
+        prompt=prompt,
+        num_inference_steps=num_inference_steps,
+        guidance_scale=guidance_scale,
     ).images[0]
 
     title = GoogleTranslator(source="en", target="ko").translate(prompt)
