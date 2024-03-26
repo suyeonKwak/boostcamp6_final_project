@@ -103,10 +103,8 @@ def draw_image(
         # korean to English
         text = GoogleTranslator(source="ko", target="en").translate(summary)
 
-        # prompt = (
-        #     "A oil painting of the scene that " + text
-        # )  # + " in the style of Monet"
-        prompt = text
+        prompt = "A cartoon scene that " + text  # + " in the style of Monet"
+        # prompt = text
         print(f"prompt : {prompt}")
 
     elif mode == "keyword":
@@ -187,7 +185,7 @@ if __name__ == "__main__":
     #     꽃도 보고 카페에 들려 커피도 마셨다. 바쁜 평일을 보내고 이렇게 주말을 여유롭게 /
     #     보내니 소소한 행복을 누리는 것 같아 좋았다."""
 
-    mode = "summary"  # keyword
+    mode = "summary"  # summary or keyword
     num_inference_steps = 30
     guidance_scale = 8.5
     grid = {
@@ -240,7 +238,8 @@ if __name__ == "__main__":
                 ]
             )
             new_image_path = os.path.join(
-                save_dir, f"image_without_prompt_{nis}_{gs}_{file_count + 1}.png"
+                save_dir,
+                f"image_summary_prompt_cartoon_{nis}_{gs}_{file_count + 1}.png",
             )
             new_image = new_image.resize((768, 768))
 
